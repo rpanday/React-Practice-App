@@ -1,26 +1,32 @@
 import _ from 'lodash';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Search, Grid, Header, Segment } from 'semantic-ui-react';
 
-const source = [{
-    title: 'a.txt',
-    text: 'this is document titled a.txt. This will be about pdf document about cricket.'
-},
-{
-    title: 'B.txt',
-    text: 'this is document titled B.txt. This will be about TXT document about FOOTBALL.'
-}];
-
 export default class SearchBar extends React.Component {
-    componentWillMount () {
+    static propTypes = {
+        source: PropTypes.array.isRequired
+    }
+
+    constructor (props) {
+        super(props);
+        this.state = {
+            value: '',
+            isLoading: false,
+            results: [],
+            source: props.source
+        };
+    }
+
+    componentWillMount = () => {
         this.resetComponent();
     }
 
-    resetComponent () {
+    resetComponent = () => {
         this.setState({ isLoading: false, results: [], value: '' });
     }
 
-    handleResultSelect (e, { result }) {
+    handleResultSelect = (e, { result }) => {
         this.setState({ value: result.title });
     }
 
@@ -31,17 +37,17 @@ export default class SearchBar extends React.Component {
             if (this.state.value.length < 1) return this.resetComponent();
 
             const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
-            const isMatch = result => re.test(result.title);
+            const isMatch = result => re.test(result.text);
 
             this.setState({
                 isLoading: false,
-                results: _.filter(source, isMatch)
+                results: _.filter(this.state.source, isMatch)
             });
         }, 300);
     }
 
     render () {
-        const { isLoading, value, results } = this.state;
+        const { isLoading, value, results, source } = this.state;
 
         return (
             <Grid>
