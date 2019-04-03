@@ -92,7 +92,7 @@ var downloadFileFromDropbox = (token, fileList, callback) => {
                 var blob = response.fileBlob;
                 var reader = new FileReader();
                 reader.addEventListener("loadend", function () {
-                    console.log(reader.result); // will print out file content
+                    // console.log(reader.result); // will print out file content
                     nameContent.push({
                         title: name,
                         text: reader.result

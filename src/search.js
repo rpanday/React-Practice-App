@@ -12,6 +12,7 @@ export default class SearchBar extends React.Component {
         super(props);
         this.state = {
             value: '',
+            content: '',
             isLoading: false,
             results: [],
             source: props.source
@@ -23,11 +24,11 @@ export default class SearchBar extends React.Component {
     }
 
     resetComponent = () => {
-        this.setState({ isLoading: false, results: [], value: '' });
+        this.setState({ isLoading: false, results: [], value: '', content: '' });
     }
 
     handleResultSelect = (e, { result }) => {
-        this.setState({ value: result.title });
+        this.setState({ content: result.text });
     }
 
     handleSearchChange = (e, { value }) => {
@@ -63,6 +64,8 @@ export default class SearchBar extends React.Component {
                 </Grid.Column>
                 <Grid.Column width={10}>
                     <Segment>
+                        <Header>File Content</Header>
+                        <pre style={{ overflowX: 'auto' }}>{this.state.content}</pre>
                         <Header>State</Header>
                         <pre style={{ overflowX: 'auto' }}>{JSON.stringify(this.state, null, 2)}</pre>
                         <Header>Options</Header>
