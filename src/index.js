@@ -39,7 +39,9 @@ function setAccessToken (token) {
 
 var filterPdfDocxFiles = (entries) => {
     return entries.filter(e => e['.tag'] === 'file' &&
-        (_.endsWith(e.name.toLowerCase(), 'pdf') || _.endsWith(e.name.toLowerCase(), 'docx')));
+        _.endsWith(e.name.toLowerCase(), 'txt'));
+    // return entries.filter(e => e['.tag'] === 'file' &&
+    //     (_.endsWith(e.name.toLowerCase(), 'pdf') || _.endsWith(e.name.toLowerCase(), 'docx')));
 };
 
 var allFiles = [];
@@ -80,6 +82,41 @@ var getAllPdfDocxFilesInDropbox = (token, callback) => {
         );
 };
 
+var downloadFileFromDropbox = (token, fileList, callback) => {
+    var dbx = new DropBox.Dropbox({ accessToken: token });
+    var nameContent = [];
+    for (var i = 0; i < fileList.length; i++) {
+        var file = fileList[i];
+        dbx.filesDownload({ path: file.path_lower })
+            .then(((name, response) => {
+                var blob = response.fileBlob;
+                var reader = new FileReader();
+                reader.addEventListener("loadend", function () {
+                    console.log(reader.result); // will print out file content
+                    nameContent.push({
+                        title: name,
+                        text: reader.result
+                    });
+
+                    if (nameContent.length === fileList.length) {
+                        callback(nameContent);
+                    }
+                });
+                reader.readAsText(blob);
+            }).bind(this, file.name))
+            .catch((function (name, error) {
+                console.log(error);
+                nameContent.push({
+                    title: name,
+                    text: 'ERROR downloading file'
+                });
+                if (nameContent.length === fileList.length) {
+                    callback(nameContent);
+                }
+            }).bind(this, file.name));
+    }
+};
+
 class App extends React.Component {
     constructor () {
         super();
@@ -91,8 +128,13 @@ class App extends React.Component {
 
     componentDidMount () {
         this.setState({ isLoading: true });
-        getAllPdfDocxFilesInDropbox(getAccessToken(), (allFiles) => {
-            this.setState({ isLoading: false, source: allFiles });
+        const token = getAccessToken();
+        getAllPdfDocxFilesInDropbox(token, (allFiles) => {
+            //download file contents using dropbox & apache tika
+            //and pass a list of {names,content} to search component as source
+            downloadFileFromDropbox(token, allFiles, (nameNContent) => {
+                this.setState({ isLoading: false, source: nameNContent });
+            });
         });
     }
 
