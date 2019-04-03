@@ -10,7 +10,7 @@ module.exports = {
         filename: 'bundle.js'
     },
     devServer: {
-        contentBase: './build',
+        contentBase: './build'
     },
     module: {
         rules: [
@@ -24,14 +24,14 @@ module.exports = {
                 use: [
                     'style-loader',
                     'css-loader',
-                    'less-loader',
-                ],
-            },
+                    'less-loader'
+                ]
+            }
         ]
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.resolve('./index.html'),
-        }),
+            template: path.resolve('./index.html')
+        })
     ]
 };
