@@ -129,13 +129,15 @@ class App extends React.Component {
     componentDidMount () {
         this.setState({ isLoading: true });
         const token = getAccessToken();
-        getAllPdfDocxFilesInDropbox(token, (allFiles) => {
-            //download file contents using dropbox & apache tika
-            //and pass a list of {names,content} to search component as source
-            downloadFileFromDropbox(token, allFiles, (nameNContent) => {
-                this.setState({ isLoading: false, source: nameNContent });
+        if (token) {
+            getAllPdfDocxFilesInDropbox(token, (allFiles) => {
+                //download file contents using dropbox & apache tika
+                //and pass a list of {names,content} to search component as source
+                downloadFileFromDropbox(token, allFiles, (nameNContent) => {
+                    this.setState({ isLoading: false, source: nameNContent });
+                });
             });
-        });
+        }
     }
 
     render () {
