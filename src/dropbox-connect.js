@@ -3,10 +3,12 @@ import DropBox from 'dropbox';
 
 export default class DropboxConnect extends React.Component {
     getAccessToken = () => {
+        console.log('onclick');
         var dbx = new DropBox.Dropbox({ clientId: 'wbc3ico9085sgn3' });
         var token = dbx.getAccessToken();
         if (token) {
-            localStorage.setItem('access-token', token);
+            console.log('token', token);
+            sessionStorage.setItem('access-token', token);
         }
         return false;
     }

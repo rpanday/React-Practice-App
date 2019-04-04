@@ -19,7 +19,7 @@ class Intro extends React.Component {
 }
 
 function getAccessToken () {
-    var token = localStorage.getItem('access-token');
+    var token = sessionStorage.getItem('access-token');
     if (!token) {
         var hash = document.location.hash;
         token = hash ? hash.split('&').filter(
@@ -34,7 +34,7 @@ function getAccessToken () {
 }
 
 function setAccessToken (token) {
-    localStorage.setItem('access-token', token);
+    sessionStorage.setItem('access-token', token);
 }
 
 var filterPdfDocxFiles = (entries) => {
@@ -144,7 +144,12 @@ class App extends React.Component {
         const token = getAccessToken();
         if (token) {
             if (this.state.isLoading) {
-                return null;
+                return (
+                    <div>
+                        <Intro />
+                        <h4>Loading files from Dropbox. Please wait...</h4>
+                    </div>
+                );
             }
             // console.log(this.state.source);
             return (
@@ -163,11 +168,5 @@ class App extends React.Component {
         }
     }
 }
-
-// TODO: Switch to https://github.com/palmerhq/the-platform#stylesheet when it will be stable
-const styleLink = document.createElement("link");
-styleLink.rel = "stylesheet";
-styleLink.href = "https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css";
-document.head.appendChild(styleLink);
 
 ReactDOM.render(<App />, document.getElementById('root'));
