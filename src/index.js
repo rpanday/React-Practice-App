@@ -146,7 +146,7 @@ class App extends React.Component {
             if (this.state.isLoading) {
                 return null;
             }
-            console.log(this.state.source);
+            // console.log(this.state.source);
             return (
                 <div>
                     <Intro />

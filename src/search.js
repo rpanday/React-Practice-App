@@ -65,9 +65,9 @@ export default class SearchBar extends React.Component {
                 <Grid.Column width={10}>
                     <Segment>
                         <Header>File Content</Header>
-                        <pre style={{ overflowX: 'auto' }}>{this.state.content}</pre>
+                        <p style={{ overflowX: 'auto' }}>{this.state.content}</p>
                         <Header>All Files</Header>
-                        <pre style={{ overflowX: 'auto' }}>{source.map(s => (<p>{s.title}</p>))}</pre>
+                        <pre style={{ overflowX: 'auto' }}>{source.map((s, i) => (<p key={i}>{s.title}</p>))}</pre>
                     </Segment>
                 </Grid.Column>
             </Grid>
